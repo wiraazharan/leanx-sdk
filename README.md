@@ -1,9 +1,9 @@
-![LeanxSdk](.github/logo.png?raw=true)
+<!-- ![LeanxSdk](.github/logo.png?raw=true) -->
 
 # LeanxSdk, PHP SDK for LeanX Integration
 
-[![Latest Version](https://img.shields.io/github/release/wiraazharan/leanx-sdk.svg?style=flat-square)](https://github.com/wiraazharan/leanx-sdk/releases)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/wiraazharan/leanx-sdk/ci.yml?label=ci%20build&style=flat-square)](https://github.com/wiraazharan/leanx-sdk/actions?query=workflow%3ACI)
+<!-- [![Latest Version](https://img.shields.io/github/release/wiraazharan/leanx-sdk.svg?style=flat-square)](https://github.com/wiraazharan/leanx-sdk/releases)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/wiraazharan/leanx-sdk/ci.yml?label=ci%20build&style=flat-square)](https://github.com/wiraazharan/leanx-sdk/actions?query=workflow%3ACI) -->
 [![Total Downloads](https://img.shields.io/packagist/dt/wiraazharan/leanx-sdk.svg?style=flat-square)](https://packagist.org/packages/wiraazharan/leanx-sdk)
 
 LeanxSdk is a PHP SDK designed to simplify integration with the LeanX payment API. This SDK provides easy-to-use methods for generating payment links, validating payments, and checking payment statuses.
