@@ -3,56 +3,69 @@
 namespace Wiraazharan\LeanxSdk;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\RequestException;
 
 class LeanxSdk
 {
-    private $client;
-    private $authToken;
-    private $baseUrl;
+    protected $client;
+    protected $authToken;
+    protected $baseUrl;
 
-    public function __construct($authToken, $baseUrl)
+    public function __construct(string $authToken, string $baseUrl)
     {
         $this->authToken = $authToken;
         $this->baseUrl = rtrim($baseUrl, '/');
-        $this->client = new Client([
-            'base_uri' => $this->baseUrl,
-            'headers' => [
-                'auth-token' => $this->authToken,
-                'Accept' => 'application/json',
-            ],
-        ]);
-    }
-
-    public function request($method, $endpoint, $parameters = [])
-    {
-        try {
-            $response = $this->client->request($method, $endpoint, [
-                'json' => $parameters,
-            ]);
-            return json_decode($response->getBody(), true);
-        } catch (RequestException $e) {
-            if ($e->hasResponse()) {
-                return json_decode($e->getResponse()->getBody()->getContents(), true);
-            }
-            return ['error' => $e->getMessage()];
-        }
+        $this->client = new Client();
     }
 
     public function generatePaymentLink(array $parameters)
     {
-        return $this->request('POST', '/api/v1/merchant/create-bill-page', $parameters);
+        $endpoint = '/merchant/create-bill-page';
+        return $this->sendRequest('POST', $endpoint, $parameters);
     }
 
     public function validatePayment(array $parameters)
     {
-        return $this->request('POST', '/api/v1/merchant/validate', $parameters);
+        $endpoint = '/merchant/validate';
+        return $this->sendRequest('POST', $endpoint, $parameters);
     }
 
-    public function checkPaymentStatus($invoiceNo)
+    public function checkPaymentStatus(string $invoiceNo)
     {
-        $endpoint = '/api/v1/merchant/manual-checking-transaction';
-        $parameters = ['invoice_no' => $invoiceNo];
-        return $this->request('GET', $endpoint, $parameters);
+        $endpoint = '/merchant/manual-checking-transaction';
+        return $this->sendRequest('GET', $endpoint, ['invoice_no' => $invoiceNo]);
+    }
+
+    public function createBillPage(array $parameters)
+    {
+        $endpoint = '/merchant/create-bill-page';
+        return $this->sendRequest('POST', $endpoint, $parameters, true);
+    }
+
+    protected function sendRequest(string $method, string $endpoint, array $parameters = [], bool $json = false)
+    {
+        $url = $this->baseUrl . $endpoint;
+
+        $headers = [
+            'auth-token' => $this->authToken,
+            'Accept' => 'application/json'
+        ];
+
+        if ($json) {
+            $headers['Content-Type'] = 'application/json';
+            $body = json_encode($parameters);
+        } else {
+            $body = http_build_query($parameters);
+        }
+
+        $request = new Request($method, $url, $headers, $body);
+
+        try {
+            $response = $this->client->sendAsync($request)->wait();
+            return json_decode($response->getBody(), true);
+        } catch (RequestException $e) {
+            return ['error' => $e->getMessage()];
+        }
     }
 }
