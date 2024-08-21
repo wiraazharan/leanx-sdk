@@ -1,0 +1,24 @@
+{
+    "name": "wiraazharan/leanx-sdk",
+    "description": "This package is to assist LeanX integration",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^7.9"
+    },
+    "require-dev": {
+        "guzzlehttp/guzzle": "^7.9"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Wiraazharan\\LeanxSdk\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Wira Azharan"
+        }
+    ],
+    "minimum-stability": "stable",
+    "version": "1.0.0"
+}
