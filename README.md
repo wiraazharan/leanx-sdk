@@ -54,6 +54,19 @@ $response = $sdk->CheckPaymentStatusV1($invoiceNo);
 print_r($response);
 ```
 
+### Payment Services List
+
+```php
+$parameters = [
+  "payment_type" => "WEB_PAYMENT",
+  "payment_status" => "active",
+  "payment_model_reference_id" => 1,
+];
+
+$response = $sdk->GetPaymentServices($parameters);
+print_r($response);
+```
+
 ---
 
 ## HMAC Endpoints
@@ -100,6 +113,19 @@ print_r($response);
 $invoiceNo = 'INV12345';
 
 $response = $sdk->CheckPaymentStatusV1WithHmac($invoiceNo);
+print_r($response);
+```
+
+### Payment Services List
+
+```php
+$parameters = [
+  "payment_type" => "WEB_PAYMENT",
+  "payment_status" => "active",
+  "payment_model_reference_id" => 1,
+];
+
+$response = $sdk->GetPaymentServicesHmac($parameters);
 print_r($response);
 ```
 

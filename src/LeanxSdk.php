@@ -44,9 +44,9 @@ class LeanxSdk
         $body = $parameters;
         $response = json_decode($this->PostRequestMamJsonBody($endpoint, $header, $body));
         $responses = [
-            "url" => $endpoint,
-            "header" => $header,
-            "body" => $body,
+            // "url" => $endpoint,
+            // "header" => $header,
+            // "body" => $body,
             "response" => $response,
         ];
         return $responses;
@@ -70,9 +70,36 @@ class LeanxSdk
         $body = [];
         $response = json_decode($this->PostRequestLeanx($endpoint, $header, $body));
         $responses = [
-            "url" => $endpoint,
-            "header" => $header,
-            "body" => $body,
+            // "url" => $endpoint,
+            // "header" => $header,
+            // "body" => $body,
+            "response" => $response,
+        ];
+        return $responses;
+    }
+    public function GetPaymentServices(array $parameters)
+    {
+        $URLPATH = "/api/v1/merchant/list-payment-services";
+        $HTTPMETHOD = "POST";
+        $endpoint = $this->baseUrl . $URLPATH;
+
+        // Prepare the request headers
+        $header = [
+            'Content-Type' => 'application/json',
+            'auth-token' => $this->authToken,
+        ];
+
+        // Prepare the request body
+        $body = $parameters;
+
+        // Make the POST request and get the response
+        $response = json_decode($this->PostRequestMamJsonBody($endpoint, $header, $body));
+
+        // Prepare and return the response details
+        $responses = [
+            // "url" => $endpoint,
+            // "header" => $header,
+            // "body" => $body,
             "response" => $response,
         ];
         return $responses;
@@ -103,15 +130,14 @@ class LeanxSdk
 
         $response = json_decode($this->PostRequestMamJsonBody($endpoint, $header, $body));
         $responses = [
-            "url" => $endpoint,
-            "signature" => $signatures,
-            "header" => $header,
-            "body" => $body,
+            // "url" => $endpoint,
+            // "signature" => $signatures,
+            // "header" => $header,
+            // "body" => $body,
             "response" => $response,
         ];
         return $responses;
     }
-
     public function CreateAutoBillPagev1WithHashmac(array $parameters)
     {
         $URLPATHFORSIGNATURE = "/api/v1/merchant/create-auto-bill-page";
@@ -135,15 +161,14 @@ class LeanxSdk
 
         $response = json_decode($this->PostRequestMamJsonBody($endpoint, $header, $body));
         $responses = [
-            "url" => $endpoint,
-            "signature" => $signatures,
-            "header" => $header,
-            "body" => $body,
+            // "url" => $endpoint,
+            // "signature" => $signatures,
+            // "header" => $header,
+            // "body" => $body,
             "response" => $response,
         ];
         return $responses;
     }
-
     public function CheckPaymentStatusV1WithHmac(string $invoiceNo)
     {
         $URLPATHFORSIGNATURE = "/api/v1/merchant/manual-checking-transaction";
@@ -166,10 +191,44 @@ class LeanxSdk
         $body = [];
         $response = json_decode($this->PostRequestLeanx($endpoint, $header, $body));
         $responses = [
-            "url" => $endpoint,
-            "signature" => $signatures,
-            "header" => $header,
-            "body" => $body,
+            // "url" => $endpoint,
+            // "signature" => $signatures,
+            // "header" => $header,
+            // "body" => $body,
+            "response" => $response,
+        ];
+        return $responses;
+    }
+    public function GetPaymentServicesHmac(array $parameters)
+    {
+        $URLPATHFORSIGNATURE = "/api/v1/merchant/list-payment-services";
+        $URLPATH = "/api/v1/merchant/list-payment-services";
+        $HTTPMETHOD = "POST";
+        $endpoint = $this->baseUrl . $URLPATH;
+
+        //GENERATE SIGNATURE
+        $signatures = $this->GenerateSignature($this->UUID, $this->authToken, $this->hashKey, $HTTPMETHOD, $URLPATHFORSIGNATURE);
+        //GENERATE SIGNATURE
+
+        $header = [
+            'Content-Type' => 'application/json',
+            'auth-token' => $this->authToken,
+            'x-signature' => $signatures["x-signature"],
+            'x-timestamp' => $signatures["x-timestamp"],
+            'x-nonce' => $signatures["x-nonce"],
+        ];
+
+        // Prepare the request body
+        $body = $parameters;
+
+        // Make the POST request and get the response
+        $response = json_decode($this->PostRequestMamJsonBody($endpoint, $header, $body));
+
+        // Prepare and return the response details
+        $responses = [
+            // "url" => $endpoint,
+            // "header" => $header,
+            // "body" => $body,
             "response" => $response,
         ];
         return $responses;
