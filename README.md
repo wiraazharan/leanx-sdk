@@ -34,7 +34,6 @@ $sdk = new LeanxSdk($authToken, $baseUrl);
 ### Generate a Payment Link
 ### To generate a payment link, use the generatePaymentLink method. Here is an example of how to use it:
 ``` php
-Copy code
 $parameters = [
     'amount' => 100.00,
     'full_name' => 'John Doe',
@@ -51,7 +50,6 @@ print_r($response);
 
 ### Validate a Payment
 ```php
-Copy code
 $parameters = [
     'invoice_no' => 'INV12345'
 ];
@@ -63,7 +61,6 @@ print_r($response);
 
 ### Check Payment Status
 ```php
-Copy code
 $invoiceNo = 'INV12345';
 
 $response = $sdk->checkPaymentStatus($invoiceNo);
