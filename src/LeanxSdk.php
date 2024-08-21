@@ -7,6 +7,10 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\RequestException;
 use stdClass;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+use Firebase\JWT\ExpiredException;
+use Firebase\JWT\SignatureInvalidException;
 
 class LeanxSdk
 {
@@ -39,6 +43,32 @@ class LeanxSdk
 
         $body = $parameters;
         $response = json_decode($this->PostRequestMamJsonBody($endpoint, $header, $body));
+        $responses = [
+            "url" => $endpoint,
+            "header" => $header,
+            "body" => $body,
+            "response" => $response,
+        ];
+        return $responses;
+    }
+    public function CheckPaymentStatusV1(string $invoiceNo)
+    {
+        $URLPATHFORSIGNATURE = "/api/v1/merchant/manual-checking-transaction";
+        $URLPATH = "/api/v1/merchant/manual-checking-transaction?invoice_no=" . $invoiceNo;
+        $HTTPMETHOD = "POST";
+        $endpoint = $this->baseUrl . $URLPATH;
+
+        //GENERATE SIGNATURE
+        $signatures = $this->GenerateSignature($this->UUID, $this->authToken, $this->hashKey, $HTTPMETHOD, $URLPATHFORSIGNATURE);
+        //GENERATE SIGNATURE
+
+        $header = [
+            'Content-Type' => 'application/json',
+            'auth-token' => $this->authToken,
+        ];
+
+        $body = [];
+        $response = json_decode($this->PostRequestLeanx($endpoint, $header, $body));
         $responses = [
             "url" => $endpoint,
             "header" => $header,
@@ -147,8 +177,30 @@ class LeanxSdk
     //HMAC ENDPOINTS;
 
 
+    //DECODE CALLBACK
+    public function DecodeCallback($payload)
+    {
+        $secretKey = $this->hashKey;
+        try {
+            // Decode the JWT using the provided secret key and algorithm
+            $decoded = JWT::decode($payload, new Key($secretKey, 'HS256'));
+            return (array) $decoded; // Convert the decoded object to an array
+        } catch (ExpiredException $e) {
+            // Handle expired token
+            return ['error' => 'Token expired'];
+        } catch (SignatureInvalidException $e) {
+            // Handle invalid signature
+            return ['error' => 'Invalid token signature'];
+        } catch (\Exception $e) {
+            // Handle other possible exceptions
+            return ['error' => 'Invalid token: ' . $e->getMessage()];
+        }
+    }
+    //DECODE CALLBACK
 
-    //TOOLBOX................................................................
+
+
+    //TOOLBOX
 
     protected function sendRequest(string $method, string $endpoint, array $parameters = [], bool $json = false)
     {
