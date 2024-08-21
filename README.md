@@ -2,6 +2,8 @@
 
 LeanxSdk is a PHP SDK designed to simplify integration with the LeanX payment API. This SDK provides easy-to-use methods for generating payment links, validating payments, and checking payment statuses.
 
+API Docs : https://docs.leanx.io/api-docs
+
 *   Easy setup and usage for LeanX payment integration.
 *   Flexible configuration with dynamic base URLs and endpoints.
 *   Comprehensive support for generating and managing payments.
